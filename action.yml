@@ -1,0 +1,52 @@
+name: 'Merge Branches'
+description: 'Merge branches using GitHub Action utilities'
+
+inputs:
+  branch_prefix:
+    description: 'Prefix for the new branch'
+    required: true
+  branch_to_merge_from:
+    description: 'Branch to merge from'
+    required: true
+  branch_to_merge_into:
+    description: 'Branch to merge into'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Fetch all branches
+      run: git fetch --all
+
+    - name: Get Repo Name
+      id: repo
+      run: echo "##[set-output name=name;]$(basename -s .git `git config --get remote.origin.url`)"
+
+    - name: Checkout branch to merge into
+      run: |
+        git checkout ${{ inputs.branch_to_merge_into }}
+        git pull --ff-only origin ${{ inputs.branch_to_merge_into }}
+
+    - name: Get commit hash from branch to merge from
+      id: commit
+      run: echo "##[set-output name=hash;]$(git rev-parse --short ${{ inputs.branch_to_merge_from }})"
+
+    - name: Create new branch
+      id: new_branch
+      run: |
+        new_branch=${{ inputs.branch_prefix }}-${{ steps.commit.outputs.hash }}
+        git checkout -b $new_branch
+        echo "##[set-output name=branch;]$new_branch"
+
+    - name: Merge branch
+      run: |
+        git merge --ff-only origin/${{ inputs.branch_to_merge_from }}
+        git tag -a ${{ steps.commit.outputs.hash }} -m "${{ steps.commit.outputs.hash }}" || true
+        git push origin ${{ steps.new_branch.outputs.branch }}
+
+    - name: Output PR link
+      run: |
+      echo "Open Your Pull Request Here: https://github.com/${{ github.repository }}/compare/${{ inputs.branch_to_merge_into }}...${{ steps.new_branch.outputs.branch }}"
