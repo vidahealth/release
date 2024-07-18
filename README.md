@@ -11,7 +11,7 @@
 * tags and pushes the new branch
 
 ## How do I use it?
-Create `.github/actions/release` in your repository
+Create `.github/actions/release` in your repository with the following contents:
 
 ```yaml
 name: 'Release'
@@ -26,3 +26,5 @@ jobs:
         uses: vidahealth/release@main
 ```
 
+To run it in the repository, navigate to Actions:
+![run_example.png](run_example.png)

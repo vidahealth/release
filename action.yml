@@ -10,10 +10,6 @@ runs:
     - name: Fetch all branches
       run: git fetch --all
 
-    - name: Get Repo Name
-      id: repo
-      run: echo "##[set-output name=name;]$(basename -s .git `git config --get remote.origin.url`)"
-
     - name: Checkout release
       run: |
         git checkout release
