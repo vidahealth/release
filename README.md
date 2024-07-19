@@ -13,7 +13,7 @@ __CURRENT VERSION `v1` or `1.2.0`__
 * tags and pushes the new branch
 
 ## How do I use it?
-Create `.github/actions/release` in your repository with the following contents:
+Create `.github/workflows/release.yml` in your repository with the following contents:
 
 ```yaml
 name: 'Release'
