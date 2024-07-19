@@ -9,15 +9,18 @@ runs:
 
     - name: Fetch all branches
       run: git fetch --all
+      shell: bash
 
     - name: Checkout release
       run: |
         git checkout release
         git pull --ff-only origin release
+      shell: bash
 
     - name: Get commit hash from master
       id: commit
       run: echo "##[set-output name=hash;]$(git rev-parse --short master)"
+      shell: bash
 
     - name: Create release branch
       id: new_branch
@@ -25,13 +28,16 @@ runs:
         new_branch=release-${{ steps.commit.outputs.hash }}
         git checkout -b $new_branch
         echo "##[set-output name=branch;]$new_branch"
+      shell: bash
 
     - name: Merge branch
       run: |
         git merge --ff-only origin/master
         git tag -a ${{ steps.commit.outputs.hash }} -m "${{ steps.commit.outputs.hash }}" || true
         git push origin ${{ steps.new_branch.outputs.branch }}
+      shell: bash
 
     - name: Output PR link
       run: |
-      echo "Open Your Pull Request Here: https://github.com/${{ github.repository }}/compare/release...${{ steps.new_branch.outputs.branch }}"
+        echo "Open Your Pull Request Here: https://github.com/${{ github.repository }}/compare/release...${{ steps.new_branch.outputs.branch }}"
+      shell: bash
