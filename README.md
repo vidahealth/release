@@ -3,6 +3,8 @@
 
 > Automate creating a release candidate branch
 
+__CURRENT VERSION `v1` or `1.2.0`__
+
 ## What does it do?
 * checks out `release`
 * gets the commit hash from `master`
@@ -23,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Release
-        uses: vidahealth/release@main
+        uses: vidahealth/release@v1
 ```
 
 To run it in the repository, navigate to Actions:
