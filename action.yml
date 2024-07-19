@@ -19,7 +19,7 @@ runs:
 
     - name: Get commit hash from master
       id: commit
-      run: echo "##[set-output name=hash;]$(git rev-parse --short master)"
+      run: echo "hash=$(git rev-parse --short master)" >> $GITHUB_OUTPUT
       shell: bash
 
     - name: Create release branch
@@ -27,7 +27,7 @@ runs:
       run: |
         new_branch=release-${{ steps.commit.outputs.hash }}
         git checkout -b $new_branch
-        echo "##[set-output name=branch;]$new_branch"
+        echo "branch=$new_branch" >> $GITHUB_OUTPUT
       shell: bash
 
     - name: Merge branch
